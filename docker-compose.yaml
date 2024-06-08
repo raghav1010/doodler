@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+
+  doodler:
+    build: './doodler'
+    ports:
+      - "5000:5000"
+    depends_on:
+      - rabbit
+
+
+  rabbit:
+    hostname: rabbit
+    image: "rabbitmq:3-management"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  worker:
+    build: './worker'
+    user: nobody
+    depends_on:
+      - rabbit
+      - doodler
