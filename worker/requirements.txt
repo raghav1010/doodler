@@ -2,3 +2,5 @@ Flask
 celery
 numpy
 keras
+pillow
+tensorflow

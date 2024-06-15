@@ -11,9 +11,14 @@ except Exception as e:
 app = Flask(__name__)
 
 
-simple_app = Celery('simple_worker',
+simple_app = Celery('worker',
                     broker='amqp://admin:mypass@rabbit:5672',
                     backend='rpc://')
+
+
+@app.route('/ping')
+def ping():
+    return 'Hello'
 
 
 @app.route('/task_status/<task_id>')
@@ -29,13 +34,18 @@ def task_result(task_id):
     return "Result of the Task " + str(result)
 
 
-@app.route("/predict-image/", methods=["POST"])
+@app.route('/predict-image/', methods=['POST'])
 def predict_img():
-    message = request.get_json(force=True)
-    encoded = message["image"]
-    decoded = base64.b64decode(encoded)
-    image = Image.open(io.BytesIO(decoded))
-
+    try:
+        print("starting image decoding...")
+        message = request.get_json(force=True)
+        encoded = message["image"]
+        decoded = base64.b64decode(encoded)
+        image = Image.open(io.BytesIO(decoded))
+    except Exception as exc:
+        print(str(exc))
+        return 'Something went wrong'
+    print("image decoded")
     r = simple_app.send_task('tasks.predict', kwargs={'image': image})
     app.logger.info(r.backend)
     return r.id

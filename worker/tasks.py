@@ -3,7 +3,7 @@ from celery import Celery
 from celery.utils.log import get_task_logger
 
 import numpy as np
-from keras.models import Sequential, load_model
+from keras.models import load_model
 from keras.preprocessing.image import ImageDataGenerator, img_to_array
 
 from flask import jsonify

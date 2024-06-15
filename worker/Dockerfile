@@ -1,4 +1,7 @@
-FROM python:3.9-slim-bullseye
+FROM python:3.8
+
+RUN apt-get update
+RUN apt-get -y install libhdf5-dev
 
 RUN pip install --upgrade pip setuptools wheel
 # layer caching for faster builds

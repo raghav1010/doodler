@@ -1,4 +1,4 @@
-FROM python:3.9-slim-bullseye
+FROM python:3.8
 
 # layer caching for faster builds
 COPY requirements.txt /
@@ -9,6 +9,7 @@ ADD . /doodler
 WORKDIR /doodler
 
 ENV FLASK_ENV=development
+ENV FLASK_DEBUG=1
 
 CMD flask run --host=0.0.0.0
 
